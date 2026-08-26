@@ -1,0 +1,75 @@
+import tkinter as tk
+from tkinter import ttk
+
+def calcular():
+    try:
+        refil = int(entrada_refil.get())
+        cozinha = int(entrada_cozinha.get())
+        peso = float(entrada_peso.get())
+        inicial = float(entrada_inicial.get())
+
+        sacos = peso / 0.065
+        total = sacos + (cozinha * 250)
+        final = inicial - (refil * 250) + total
+
+        resultado.config(text=f"Estoque final: {final:.2f}", fg="green")
+
+        # salvar no histórico
+        historico.insert(tk.END, f"Final: {final:.2f}")
+
+    except:
+        resultado.config(text="Erro: verifique os valores", fg="red")
+
+def limpar():
+    entrada_inicial.delete(0, tk.END)
+    entrada_refil.delete(0, tk.END)
+    entrada_cozinha.delete(0, tk.END)
+    entrada_peso.delete(0, tk.END)
+    resultado.config(text="")
+    
+# Janela
+janela = tk.Tk()
+janela.title("Peri Fertilizantes - Controle de Estoque")
+janela.geometry("350x450")
+janela.configure(bg="#f0f0f0")
+
+# Título
+titulo = tk.Label(janela, text="Peri Fertilizantes", font=("Arial", 16, "bold"), bg="#f0f0f0")
+titulo.pack(pady=10)
+
+subtitulo = tk.Label(janela, text="Controle de Estoque", font=("Arial", 12), bg="#f0f0f0")
+subtitulo.pack(pady=5)
+
+# Frame de entrada
+frame = tk.Frame(janela, bg="#f0f0f0")
+frame.pack(pady=10)
+
+def criar_campo(texto):
+    tk.Label(frame, text=texto, bg="#f0f0f0").pack()
+    entry = tk.Entry(frame)
+    entry.pack(pady=3)
+    return entry
+
+entrada_inicial = criar_campo("Estoque inicial:")
+entrada_refil = criar_campo("Refil (fardos):")
+entrada_cozinha = criar_campo("Cozinha (fardos):")
+entrada_peso = criar_campo("Peso (kg):")
+
+# Botões
+frame_botoes = tk.Frame(janela, bg="#f0f0f0")
+frame_botoes.pack(pady=10)
+
+tk.Button(frame_botoes, text="Calcular", command=calcular, bg="#4CAF50", fg="white", width=10).grid(row=0, column=0, padx=5)
+tk.Button(frame_botoes, text="Limpar", command=limpar, bg="#f44336", fg="white", width=10).grid(row=0, column=1, padx=5)
+
+# Resultado
+resultado = tk.Label(janela, text="", font=("Arial", 12), bg="#f0f0f0")
+resultado.pack(pady=10)
+
+# Histórico
+tk.Label(janela, text="Histórico:", bg="#f0f0f0").pack()
+
+historico = tk.Listbox(janela, height=6)
+historico.pack(padx=10, fill="both")
+
+janela.mainloop()
